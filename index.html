@@ -816,7 +816,7 @@
           <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--terracota-dk);margin-bottom:4px;">Pix — Gratuito</p>
           <p style="font-size:.78rem;color:var(--text-mid);font-weight:300;line-height:1.6;">Taxa: <strong style="color:#2a7a2a;">0% — sem acréscimos</strong><br>Pagamento confirmado na hora 🎉</p>
         </div>
-        <button class="btn-checkout" onclick="pagarPix()">Pagar com Pix →</button>
+        <button class="btn-checkout" id="btnPix" onclick="pagarPix()">Pagar com Pix →</button>
       </div>
 
       <!-- CARTÃO PANEL -->
@@ -844,7 +844,7 @@
           </select>
           <div id="parcelaResumo" style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:2px;font-size:.82rem;color:var(--text-dark);line-height:1.7;"></div>
         </div>
-        <button class="btn-checkout" onclick="pagarCartao()">Pagar com Cartão →</button>
+        <button class="btn-checkout" id="btnCard" onclick="pagarCartao()">Pagar com Cartão →</button>
       </div>
 
       <button class="btn-back" onclick="goToStep('stepForm')">← Voltar</button>
@@ -991,7 +991,7 @@
     selectTab('pix');
   }
 
-  // Taxas InfinitePay 2026 por parcela
+  // Taxas InfinitePay 2026 por parcela (repassadas ao cliente)
   const taxasInfinitePay = {
     1: 2.69, 2: 4.20, 3: 4.80, 4: 5.40, 5: 6.00, 6: 6.60,
     7: 7.20, 8: 7.80, 9: 8.40, 10: 8.99, 11: 9.49, 12: 9.99
@@ -999,30 +999,36 @@
 
   function selectTab(tab) {
     const isPix = tab === 'pix';
-    document.getElementById('panelPix').style.display = isPix ? 'block' : 'none';
-    document.getElementById('panelCard').style.display = isPix ? 'none' : 'block';
-    document.getElementById('tabPix').style.background = isPix ? 'var(--terracota)' : '#fff';
-    document.getElementById('tabPix').style.color = isPix ? '#fff' : 'var(--text-mid)';
-    document.getElementById('tabPix').style.borderColor = isPix ? 'var(--terracota)' : 'var(--border)';
-    document.getElementById('tabCard').style.background = isPix ? '#fff' : 'var(--terracota)';
-    document.getElementById('tabCard').style.color = isPix ? 'var(--text-mid)' : '#fff';
-    document.getElementById('tabCard').style.borderColor = isPix ? 'var(--border)' : 'var(--terracota)';
+    document.getElementById('panelPix').style.display  = isPix ? 'block' : 'none';
+    document.getElementById('panelCard').style.display = isPix ? 'none'  : 'block';
+    const tPix  = document.getElementById('tabPix');
+    const tCard = document.getElementById('tabCard');
+    tPix.style.background   = isPix ? 'var(--terracota)' : '#fff';
+    tPix.style.color        = isPix ? '#fff' : 'var(--text-mid)';
+    tPix.style.borderColor  = isPix ? 'var(--terracota)' : 'var(--border)';
+    tCard.style.background  = isPix ? '#fff' : 'var(--terracota)';
+    tCard.style.color       = isPix ? 'var(--text-mid)' : '#fff';
+    tCard.style.borderColor = isPix ? 'var(--border)' : 'var(--terracota)';
     if (!isPix) buildParcelasGrid();
   }
 
   function buildParcelasGrid() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const grid = document.getElementById('parcelasGrid');
+    const grid  = document.getElementById('parcelasGrid');
     grid.innerHTML = '';
     [1,2,3,4,5,6,7,8,9,10,11,12].forEach(n => {
-      const taxa = taxasInfinitePay[n];
-      const totalComTaxa = total * (1 + taxa / 100);
-      const parcela = totalComTaxa / n;
+      const taxa          = taxasInfinitePay[n];
+      const totalComTaxa  = total * (1 + taxa / 100);
+      const parcela       = totalComTaxa / n;
       const el = document.createElement('div');
-      el.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-size:.75rem;color:var(--text-dark);';
+      el.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-size:.75rem;color:var(--text-dark);cursor:pointer;';
       el.innerHTML = '<strong style="color:var(--terracota-dk);">' + n + 'x</strong> ' +
         fmtBRL(Math.round(parcela)) +
         '<br><span style="color:var(--text-mid);font-size:.65rem;">' + taxa + '% · total ' + fmtBRL(Math.round(totalComTaxa)) + '</span>';
+      el.onclick = () => {
+        document.getElementById('parcelasSelect').value = n + ',' + taxa;
+        updateParcelaDisplay();
+      };
       grid.appendChild(el);
     });
     updateParcelaDisplay();
@@ -1030,34 +1036,79 @@
 
   function updateParcelaDisplay() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const sel = document.getElementById('parcelasSelect');
+    const sel   = document.getElementById('parcelasSelect');
     const [parcelas, taxa] = sel.value.split(',').map(Number);
     const totalComTaxa = total * (1 + taxa / 100);
-    const parcela = totalComTaxa / parcelas;
+    const parcela      = totalComTaxa / parcelas;
     document.getElementById('parcelaResumo').innerHTML =
       '<strong>' + parcelas + 'x de ' + fmtBRL(Math.round(parcela)) + '</strong><br>' +
-      'Total com taxa (' + taxa + '%): <strong style="color:var(--terracota);">' + fmtBRL(Math.round(totalComTaxa)) + '</strong>';
+      'Total com taxa (' + taxa + '%): <strong style="color:var(--terracota);">' + fmtBRL(Math.round(totalComTaxa)) + '</strong><br>' +
+      '<span style="font-size:.7rem;color:var(--text-mid);">Taxa repassada ao presenteador · você recebe 100%</span>';
   }
 
-  function pagarPix() {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const url = 'https://pay.infinitepay.io/luxuryparfumce/' + total + '/';
-    window.open(url, '_blank');
-    goToStep('stepSuccess');
-    cart.length = 0;
-    updateCartUI();
+  async function chamarAPI(totalCentavos, descricao) {
+    const name  = document.getElementById('fName').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const phone = document.getElementById('fPhone').value.trim();
+    const orderNsu = 'KR-' + Date.now();
+    const redirect = window.location.origin + window.location.pathname + '?pagamento=confirmado';
+
+    const payload = {
+      items: [{ quantity: 1, price: totalCentavos, description: descricao }],
+      order_nsu: orderNsu,
+      redirect_url: redirect,
+      name, email, phone
+    };
+
+    const res  = await fetch('/api/criar-link', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    console.log('API response:', data);
+
+    // API retorna "url" (não "payment_url")
+    if (data && data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.message || data.error || JSON.stringify(data));
+    }
   }
 
-  function pagarCartao() {
+  async function pagarPix() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const sel = document.getElementById('parcelasSelect');
+    const desc  = cart.map(i => i.name + ' x' + i.qty).join(' | ');
+    const btn   = document.getElementById('btnPix');
+    btn.textContent = 'Gerando link Pix…';
+    btn.disabled = true;
+    try {
+      // Pix: sem taxa, envia valor exato em centavos
+      await chamarAPI(total * 100, desc);
+    } catch(err) {
+      showToast('Erro: ' + err.message);
+      btn.textContent = 'Pagar com Pix →';
+      btn.disabled = false;
+    }
+  }
+
+  async function pagarCartao() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const sel   = document.getElementById('parcelasSelect');
     const [parcelas, taxa] = sel.value.split(',').map(Number);
+    // Repassa a taxa ao cliente: cobra total + taxa%
     const totalComTaxa = Math.round(total * (1 + taxa / 100));
-    const url = 'https://pay.infinitepay.io/luxuryparfumce/' + totalComTaxa + '/';
-    window.open(url, '_blank');
-    goToStep('stepSuccess');
-    cart.length = 0;
-    updateCartUI();
+    const desc = cart.map(i => i.name + ' x' + i.qty).join(' | ') + ' (' + parcelas + 'x c/ taxa)';
+    const btn  = document.getElementById('btnCard');
+    btn.textContent = 'Gerando link…';
+    btn.disabled = true;
+    try {
+      await chamarAPI(totalComTaxa * 100, desc);
+    } catch(err) {
+      showToast('Erro: ' + err.message);
+      btn.textContent = 'Pagar com Cartão →';
+      btn.disabled = false;
+    }
   }
 
   function finalizarPedido() {

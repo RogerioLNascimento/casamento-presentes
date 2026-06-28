@@ -810,7 +810,7 @@
         <p class="pix-note">Ao clicar em "Ir para o pagamento", você será redirecionado para o checkout da InfinitePay. Após pagar, voltará automaticamente para esta página. 💛</p>
       </div>
       <button class="btn-checkout" id="btnInfinitePay" onclick="irParaInfinitePay()">
-        <span id="btnPayLabel">Ir para o pagamento →</span>
+        <span id="btnPayLabel">Pagar agora →</span>
       </button>
       <button class="btn-back" onclick="goToStep('stepForm')">← Voltar</button>
     </div>
@@ -955,52 +955,18 @@
     goToStep('stepPix');
   }
 
-  async function irParaInfinitePay() {
-    const btn = document.getElementById('btnPayLabel');
-    btn.textContent = 'Gerando link…';
-    document.getElementById('btnInfinitePay').disabled = true;
-
+  function irParaInfinitePay() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const name = document.getElementById('fName').value.trim();
-    const email = document.getElementById('fEmail').value.trim();
-    const msg = document.getElementById('fMsg').value.trim();
 
-    const items = cart.map(i => ({
-      quantity: i.qty,
-      price: i.price * 100, // centavos
-      description: i.name
-    }));
-
-    const orderNsu = 'KR-' + Date.now();
-
-    const payload = {
-      handle: 'luxuryparfumce',
-      redirect_url: window.location.href.split('?')[0] + '?pagamento=confirmado',
-      order_nsu: orderNsu,
-      items: items
-    };
-
-    try {
-      const res = await fetch('/api/criar-link', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-
-      if (data && data.payment_url) {
-        window.location.href = data.payment_url;
-      } else {
-        console.error('Resposta da API:', data);
-        throw new Error(data.message || 'Link não retornado');
-      }
-    } catch (err) {
-      console.error(err);
-      showToast('Erro ao gerar link: ' + err.message);
-      btn.textContent = 'Ir para o pagamento →';
-      document.getElementById('btnInfinitePay').disabled = false;
+    if (total <= 0) {
+      showToast('Adicione ao menos uma cota!');
+      return;
     }
+
+    // Gera link direto da InfinitePay: pay.infinitepay.io/handle/valor
+    const valorEmReais = (total / 100).toFixed(2).replace('.', ',');
+    const url = 'https://pay.infinitepay.io/luxuryparfumce/' + total + '/';
+    window.open(url, '_blank');
   }
 
   function finalizarPedido() {

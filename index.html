@@ -604,7 +604,7 @@
           <li>Cada cota é somada ao roteiro</li>
           <li>Presente exclusivo de padrinho/madrinha</li>
         </ul>
-        <p class="card-price">R$ 1.000</p>
+        <p class="card-price">R$ 750</p>
         <p class="card-price-note">por cota · qualquer quantidade</p>
         <div class="card-controls">
           <div class="qty-wrap">
@@ -612,7 +612,7 @@
             <span class="qty-val">1</span>
             <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
           </div>
-          <button class="btn-add" onclick="addToCart(this, 'Cota I', 1000)">Presentear</button>
+          <button class="btn-add" onclick="addToCart(this, 'Cota I', 750)">Presentear</button>
         </div>
       </div>
     </div>
@@ -634,7 +634,7 @@
           <li>Experiência gastronômica especial</li>
           <li>Presente exclusivo de padrinho/madrinha</li>
         </ul>
-        <p class="card-price">R$ 2.000</p>
+        <p class="card-price">R$ 1.000</p>
         <p class="card-price-note">por cota · qualquer quantidade</p>
         <div class="card-controls">
           <div class="qty-wrap">
@@ -642,7 +642,7 @@
             <span class="qty-val">1</span>
             <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
           </div>
-          <button class="btn-add" onclick="addToCart(this, 'Cota II', 2000)">Presentear</button>
+          <button class="btn-add" onclick="addToCart(this, 'Cota II', 1000)">Presentear</button>
         </div>
       </div>
     </div>
@@ -663,7 +663,7 @@
           <li>Passeio exclusivo com fotografia</li>
           <li>Presente exclusivo de padrinho/madrinha</li>
         </ul>
-        <p class="card-price">R$ 3.000</p>
+        <p class="card-price">R$ 1.500</p>
         <p class="card-price-note">por cota · qualquer quantidade</p>
         <div class="card-controls">
           <div class="qty-wrap">
@@ -671,7 +671,7 @@
             <span class="qty-val">1</span>
             <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
           </div>
-          <button class="btn-add" onclick="addToCart(this, 'Cota III', 3000)">Presentear</button>
+          <button class="btn-add" onclick="addToCart(this, 'Cota III', 1500)">Presentear</button>
         </div>
       </div>
     </div>
@@ -687,13 +687,14 @@
         <h3 class="card-name">Cota IV</h3>
         <p class="card-tagline">Contribua com o valor do seu coração</p>
         <ul class="card-features">
-          <li>Valor mínimo de R$ 1.500</li>
+          <li>Valor mínimo de R$ 500</li>
           <li>Você escolhe o quanto deseja dar</li>
           <li>Cada centavo faz parte da viagem</li>
           <li>Presente exclusivo de padrinho/madrinha</li>
         </ul>
-        <p class="card-price">A partir de R$ 1.500</p>
-        <p class="card-price-note">valor livre · mínimo R$ 1.500</p>
+        <input id="customCardInput" class="form-input" type="number" min="500" placeholder="Valor (mín. R$ 500)"
+          style="font-size:1.1rem;font-weight:500;color:var(--terracota-dk);border:1px solid var(--border);border-radius:2px;padding:10px 14px;width:100%;font-family:'Jost',sans-serif;background:var(--cream);outline:none;margin-bottom:4px;" />
+        <p class="card-price-note">valor livre · mínimo R$ 500</p>
         <div class="card-controls">
           <div class="qty-wrap">
             <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
@@ -706,35 +707,6 @@
     </div>
 
 
-    <!-- Cota Teste -->
-    <div class="card" style="border:2px dashed var(--terracota-lt);opacity:.85;">
-      <div class="card-badge" style="background:var(--text-mid);">Teste</div>
-      <div class="card-illus">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
-        </svg>
-      </div>
-      <div class="card-body">
-        <h3 class="card-name">Cota Teste</h3>
-        <p class="card-tagline">Para validar o fluxo de pagamento</p>
-        <ul class="card-features">
-          <li>Use para testar o checkout</li>
-          <li>Valor simbólico de R$ 5,00</li>
-          <li>Remova após validar o sistema</li>
-          <li>Funciona com Pix e Cartão</li>
-        </ul>
-        <p class="card-price">R$ 5</p>
-        <p class="card-price-note">apenas para testes</p>
-        <div class="card-controls">
-          <div class="qty-wrap">
-            <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
-            <span class="qty-val">1</span>
-            <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
-          </div>
-          <button class="btn-add" onclick="addToCart(this, 'Cota Teste', 5)">Presentear</button>
-        </div>
-      </div>
-    </div>
 
   </div>
 </section>
@@ -750,10 +722,10 @@
   <div class="modal" style="max-width:360px;">
     <button class="modal-close" onclick="closeCustomModal()">✕</button>
     <p class="modal-title">Cota IV</p>
-    <p class="modal-sub">Informe o valor que deseja presentear (mínimo R$ 1.500)</p>
+    <p class="modal-sub">Informe o valor que deseja presentear (mínimo R$ 500)</p>
     <div class="form-group">
       <label class="form-label">Valor (R$)</label>
-      <input id="customValueInput" class="form-input" type="number" min="1500" placeholder="Ex: 1500" />
+      <input id="customValueInput" class="form-input" type="number" min="500" placeholder="Ex: 500" />
     </div>
     <div class="form-group">
       <label class="form-label">Quantidade de cotas</label>
@@ -891,7 +863,8 @@
   }
 
   function openCustomModal() {
-    document.getElementById('customValueInput').value = '';
+    const cardVal = document.getElementById('customCardInput').value;
+    document.getElementById('customValueInput').value = cardVal || '';
     document.getElementById('customQtyVal').textContent = '1';
     document.getElementById('modalCotaIV').classList.add('open');
   }
@@ -907,7 +880,7 @@
   function confirmCustomCart() {
     const input = document.getElementById('customValueInput');
     const val = parseFloat(input.value);
-    if (!val || val < 1500) { showToast('O valor mínimo é R$ 1.500.'); return; }
+    if (!val || val < 500) { showToast('O valor mínimo é R$ 500.'); return; }
     const price = Math.round(val);
     const qty = parseInt(document.getElementById('customQtyVal').textContent);
     const label = 'Cota IV — R$ ' + price.toLocaleString('pt-BR');

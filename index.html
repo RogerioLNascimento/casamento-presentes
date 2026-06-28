@@ -956,60 +956,29 @@
   }
 
   async function irParaInfinitePay() {
-  alert('Clique funcionando');
-
-  const btnLabel = document.getElementById('btnPayLabel');
-  const btnPay = document.getElementById('btnInfinitePay');
-
-  try {
-    if (cart.length === 0) {
-      showToast('Adicione ao menos uma cota!');
-      return;
-    }
-
-    btnLabel.textContent = 'Gerando link…';
-    btnPay.disabled = true;
+    const btn = document.getElementById('btnPayLabel');
+    btn.textContent = 'Gerando link…';
+    document.getElementById('btnInfinitePay').disabled = true;
 
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const name = document.getElementById('fName').value.trim();
+    const email = document.getElementById('fEmail').value.trim();
+    const msg = document.getElementById('fMsg').value.trim();
+
+    const items = cart.map(i => ({
+      quantity: i.qty,
+      price: i.price * 100, // centavos
+      description: i.name
+    }));
+
+    const orderNsu = 'KR-' + Date.now();
 
     const payload = {
       handle: 'luxuryparfumce',
-      redirect_url: 'https://casamento-presentes-kappa.vercel.app',
-      order_nsu: 'pedido-' + Date.now(),
-      items: cart.map(item => ({
-        quantity: item.qty,
-        price: item.price * 100,
-        description: item.name
-      }))
+      redirect_url: window.location.href.split('?')[0] + '?pagamento=confirmado',
+      order_nsu: orderNsu,
+      items: items
     };
-
-    console.log('Enviando para API:', payload);
-
-    const response = await fetch('/api/criar-link', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-
-    console.log('Resposta da API:', data);
-
-    if (data && data.url) {
-      window.location.href = data.url;
-    } else {
-      throw new Error(data.message || data.error || 'A InfinitePay não retornou o link de pagamento.');
-    }
-
-  } catch (error) {
-    console.error('Erro ao gerar link:', error);
-    showToast('Erro ao gerar link: ' + error.message);
-    btnLabel.textContent = 'Ir para o pagamento →';
-    btnPay.disabled = false;
-  }
-}
 
     try {
       const res = await fetch('/api/criar-link', {
@@ -1020,9 +989,8 @@
 
       const data = await res.json();
 
-      if (data && data.url) {
-	 window.location.href = data.url;
-      }
+      if (data && data.payment_url) {
+        window.location.href = data.payment_url;
       } else {
         console.error('Resposta da API:', data);
         throw new Error(data.message || 'Link não retornado');

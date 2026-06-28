@@ -705,6 +705,37 @@
       </div>
     </div>
 
+
+    <!-- Cota Teste -->
+    <div class="card" style="border:2px dashed var(--terracota-lt);opacity:.85;">
+      <div class="card-badge" style="background:var(--text-mid);">Teste</div>
+      <div class="card-illus">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+        </svg>
+      </div>
+      <div class="card-body">
+        <h3 class="card-name">Cota Teste</h3>
+        <p class="card-tagline">Para validar o fluxo de pagamento</p>
+        <ul class="card-features">
+          <li>Use para testar o checkout</li>
+          <li>Valor simbólico de R$ 5,00</li>
+          <li>Remova após validar o sistema</li>
+          <li>Funciona com Pix e Cartão</li>
+        </ul>
+        <p class="card-price">R$ 5</p>
+        <p class="card-price-note">apenas para testes</p>
+        <div class="card-controls">
+          <div class="qty-wrap">
+            <button class="qty-btn" onclick="changeQty(this, -1)">−</button>
+            <span class="qty-val">1</span>
+            <button class="qty-btn" onclick="changeQty(this, 1)">+</button>
+          </div>
+          <button class="btn-add" onclick="addToCart(this, 'Cota Teste', 5)">Presentear</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -829,18 +860,18 @@
         <div style="background:#fff8f6;border:1px solid var(--border);border-radius:3px;padding:12px;margin-bottom:14px;">
           <label style="display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:8px;font-weight:400;">Escolha o parcelamento</label>
           <select id="parcelasSelect" onchange="updateParcelaDisplay()" style="width:100%;border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--text-dark);background:#fff;outline:none;">
-            <option value="1,2.69">1x — sem juros (taxa 2,69%)</option>
-            <option value="2,4.20">2x — taxa 4,20%</option>
-            <option value="3,4.80">3x — taxa 4,80%</option>
-            <option value="4,5.40">4x — taxa 5,40%</option>
-            <option value="5,6.00">5x — taxa 6,00%</option>
-            <option value="6,6.60">6x — taxa 6,60%</option>
-            <option value="7,7.20">7x — taxa 7,20%</option>
-            <option value="8,7.80">8x — taxa 7,80%</option>
-            <option value="9,8.40">9x — taxa 8,40%</option>
-            <option value="10,8.99">10x — taxa 8,99%</option>
-            <option value="11,9.49">11x — taxa 9,49%</option>
-            <option value="12,9.99">12x — taxa 9,99%</option>
+            <option value="1,4.20">1x — taxa 4,20%</option>
+            <option value="2,6.09">2x — taxa 6,09%</option>
+            <option value="3,7.01">3x — taxa 7,01%</option>
+            <option value="4,7.91">4x — taxa 7,91%</option>
+            <option value="5,8.80">5x — taxa 8,80%</option>
+            <option value="6,9.67">6x — taxa 9,67%</option>
+            <option value="7,12.59">7x — taxa 12,59%</option>
+            <option value="8,13.42">8x — taxa 13,42%</option>
+            <option value="9,14.25">9x — taxa 14,25%</option>
+            <option value="10,15.06">10x — taxa 15,06%</option>
+            <option value="11,15.87">11x — taxa 15,87%</option>
+            <option value="12,16.66">12x — taxa 16,66%</option>
           </select>
           <div id="parcelaResumo" style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:2px;font-size:.82rem;color:var(--text-dark);line-height:1.7;"></div>
         </div>
@@ -993,8 +1024,8 @@
 
   // Taxas InfinitePay 2026 por parcela (repassadas ao cliente)
   const taxasInfinitePay = {
-    1: 2.69, 2: 4.20, 3: 4.80, 4: 5.40, 5: 6.00, 6: 6.60,
-    7: 7.20, 8: 7.80, 9: 8.40, 10: 8.99, 11: 9.49, 12: 9.99
+    1: 4.20, 2: 6.09, 3: 7.01, 4: 7.91, 5: 8.80, 6: 9.67,
+    7: 12.59, 8: 13.42, 9: 14.25, 10: 15.06, 11: 15.87, 12: 16.66
   };
 
   function selectTab(tab) {

@@ -792,26 +792,61 @@
       <button class="btn-back" onclick="goToStep('stepCart')">← Voltar</button>
     </div>
 
-    <!-- Step 3: InfinitePay Checkout -->
+    <!-- Step 3: Escolha de pagamento -->
     <div id="stepPix" class="form-section">
-      <p class="modal-title">Finalizar pagamento</p>
-      <p class="modal-sub">Você será redirecionado para o checkout seguro da InfinitePay</p>
-      <div class="pix-section">
-        <div class="pix-icon">💳</div>
-        <p style="font-size:.85rem;color:var(--text-mid);font-weight:300;margin-bottom:8px;">Total do seu presente</p>
-        <p style="font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--terracota-dk);margin-bottom:16px;" id="pixTotal">R$ 0</p>
-        <div style="background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:14px 16px;margin-bottom:16px;text-align:left;">
-          <p style="font-size:.78rem;color:var(--text-mid);font-weight:300;line-height:1.7;">
-            ⚡ <strong style="color:var(--terracota-dk)">Pix</strong> — gratuito, recebimento na hora<br>
-            💳 <strong style="color:var(--terracota-dk)">Cartão de crédito</strong> — parcelamento em até 12x<br>
-            🔒 Checkout 100% seguro pela InfinitePay
-          </p>
-        </div>
-        <p class="pix-note">Ao clicar em "Ir para o pagamento", você será redirecionado para o checkout da InfinitePay. Após pagar, voltará automaticamente para esta página. 💛</p>
+      <p class="modal-title">Como deseja pagar?</p>
+      <p class="modal-sub">Escolha a forma de pagamento mais conveniente</p>
+
+      <!-- Total -->
+      <div style="text-align:center;margin-bottom:20px;">
+        <p style="font-size:.78rem;color:var(--text-mid);font-weight:300;margin-bottom:4px;">Total do seu presente</p>
+        <p style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;color:var(--terracota-dk);font-weight:600;" id="pixTotal">R$ 0</p>
       </div>
-      <button class="btn-checkout" id="btnInfinitePay" onclick="irParaInfinitePay()">
-        <span id="btnPayLabel">Pagar agora →</span>
-      </button>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:8px;margin-bottom:20px;">
+        <button id="tabPix" onclick="selectTab('pix')" style="flex:1;padding:10px;border:2px solid var(--terracota);background:var(--terracota);color:#fff;border-radius:3px;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;cursor:pointer;">⚡ PIX</button>
+        <button id="tabCard" onclick="selectTab('card')" style="flex:1;padding:10px;border:2px solid var(--border);background:#fff;color:var(--text-mid);border-radius:3px;font-family:'Jost',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.08em;cursor:pointer;">💳 CARTÃO</button>
+      </div>
+
+      <!-- PIX PANEL -->
+      <div id="panelPix">
+        <div style="background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:16px;text-align:center;margin-bottom:16px;">
+          <p style="font-size:1.8rem;margin-bottom:8px;">⚡</p>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--terracota-dk);margin-bottom:4px;">Pix — Gratuito</p>
+          <p style="font-size:.78rem;color:var(--text-mid);font-weight:300;line-height:1.6;">Taxa: <strong style="color:#2a7a2a;">0% — sem acréscimos</strong><br>Pagamento confirmado na hora 🎉</p>
+        </div>
+        <button class="btn-checkout" onclick="pagarPix()">Pagar com Pix →</button>
+      </div>
+
+      <!-- CARTÃO PANEL -->
+      <div id="panelCard" style="display:none;">
+        <div style="background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:14px;margin-bottom:14px;">
+          <p style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);font-weight:400;margin-bottom:10px;">Simule o parcelamento</p>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="parcelasGrid"></div>
+          <p style="font-size:.68rem;color:var(--text-mid);font-weight:300;margin-top:10px;line-height:1.5;">* Taxas InfinitePay 2026 repassadas ao presenteador. Pix é sempre gratuito.</p>
+        </div>
+        <div style="background:#fff8f6;border:1px solid var(--border);border-radius:3px;padding:12px;margin-bottom:14px;">
+          <label style="display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:8px;font-weight:400;">Escolha o parcelamento</label>
+          <select id="parcelasSelect" onchange="updateParcelaDisplay()" style="width:100%;border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--text-dark);background:#fff;outline:none;">
+            <option value="1,2.69">1x — sem juros (taxa 2,69%)</option>
+            <option value="2,4.20">2x — taxa 4,20%</option>
+            <option value="3,4.80">3x — taxa 4,80%</option>
+            <option value="4,5.40">4x — taxa 5,40%</option>
+            <option value="5,6.00">5x — taxa 6,00%</option>
+            <option value="6,6.60">6x — taxa 6,60%</option>
+            <option value="7,7.20">7x — taxa 7,20%</option>
+            <option value="8,7.80">8x — taxa 7,80%</option>
+            <option value="9,8.40">9x — taxa 8,40%</option>
+            <option value="10,8.99">10x — taxa 8,99%</option>
+            <option value="11,9.49">11x — taxa 9,49%</option>
+            <option value="12,9.99">12x — taxa 9,99%</option>
+          </select>
+          <div id="parcelaResumo" style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:2px;font-size:.82rem;color:var(--text-dark);line-height:1.7;"></div>
+        </div>
+        <button class="btn-checkout" onclick="pagarCartao()">Pagar com Cartão →</button>
+      </div>
+
       <button class="btn-back" onclick="goToStep('stepForm')">← Voltar</button>
     </div>
 
@@ -953,20 +988,76 @@
     if (!name) { showToast('Por favor, informe seu nome.'); return; }
     updateCartUI();
     goToStep('stepPix');
+    selectTab('pix');
   }
 
-  function irParaInfinitePay() {
+  // Taxas InfinitePay 2026 por parcela
+  const taxasInfinitePay = {
+    1: 2.69, 2: 4.20, 3: 4.80, 4: 5.40, 5: 6.00, 6: 6.60,
+    7: 7.20, 8: 7.80, 9: 8.40, 10: 8.99, 11: 9.49, 12: 9.99
+  };
+
+  function selectTab(tab) {
+    const isPix = tab === 'pix';
+    document.getElementById('panelPix').style.display = isPix ? 'block' : 'none';
+    document.getElementById('panelCard').style.display = isPix ? 'none' : 'block';
+    document.getElementById('tabPix').style.background = isPix ? 'var(--terracota)' : '#fff';
+    document.getElementById('tabPix').style.color = isPix ? '#fff' : 'var(--text-mid)';
+    document.getElementById('tabPix').style.borderColor = isPix ? 'var(--terracota)' : 'var(--border)';
+    document.getElementById('tabCard').style.background = isPix ? '#fff' : 'var(--terracota)';
+    document.getElementById('tabCard').style.color = isPix ? 'var(--text-mid)' : '#fff';
+    document.getElementById('tabCard').style.borderColor = isPix ? 'var(--border)' : 'var(--terracota)';
+    if (!isPix) buildParcelasGrid();
+  }
+
+  function buildParcelasGrid() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const grid = document.getElementById('parcelasGrid');
+    grid.innerHTML = '';
+    [1,2,3,4,5,6,7,8,9,10,11,12].forEach(n => {
+      const taxa = taxasInfinitePay[n];
+      const totalComTaxa = total * (1 + taxa / 100);
+      const parcela = totalComTaxa / n;
+      const el = document.createElement('div');
+      el.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-size:.75rem;color:var(--text-dark);';
+      el.innerHTML = '<strong style="color:var(--terracota-dk);">' + n + 'x</strong> ' +
+        fmtBRL(Math.round(parcela)) +
+        '<br><span style="color:var(--text-mid);font-size:.65rem;">' + taxa + '% · total ' + fmtBRL(Math.round(totalComTaxa)) + '</span>';
+      grid.appendChild(el);
+    });
+    updateParcelaDisplay();
+  }
 
-    if (total <= 0) {
-      showToast('Adicione ao menos uma cota!');
-      return;
-    }
+  function updateParcelaDisplay() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const sel = document.getElementById('parcelasSelect');
+    const [parcelas, taxa] = sel.value.split(',').map(Number);
+    const totalComTaxa = total * (1 + taxa / 100);
+    const parcela = totalComTaxa / parcelas;
+    document.getElementById('parcelaResumo').innerHTML =
+      '<strong>' + parcelas + 'x de ' + fmtBRL(Math.round(parcela)) + '</strong><br>' +
+      'Total com taxa (' + taxa + '%): <strong style="color:var(--terracota);">' + fmtBRL(Math.round(totalComTaxa)) + '</strong>';
+  }
 
-    // Gera link direto da InfinitePay: pay.infinitepay.io/handle/valor
-    const valorEmReais = (total / 100).toFixed(2).replace('.', ',');
+  function pagarPix() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
     const url = 'https://pay.infinitepay.io/luxuryparfumce/' + total + '/';
     window.open(url, '_blank');
+    goToStep('stepSuccess');
+    cart.length = 0;
+    updateCartUI();
+  }
+
+  function pagarCartao() {
+    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+    const sel = document.getElementById('parcelasSelect');
+    const [parcelas, taxa] = sel.value.split(',').map(Number);
+    const totalComTaxa = Math.round(total * (1 + taxa / 100));
+    const url = 'https://pay.infinitepay.io/luxuryparfumce/' + totalComTaxa + '/';
+    window.open(url, '_blank');
+    goToStep('stepSuccess');
+    cart.length = 0;
+    updateCartUI();
   }
 
   function finalizarPedido() {

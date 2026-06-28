@@ -996,6 +996,15 @@
     const name  = document.getElementById('fName').value.trim();
     const email = document.getElementById('fEmail').value.trim();
     const phone = document.getElementById('fPhone').value.trim();
+    const msg   = document.getElementById('fMsg').value.trim();
+
+    // Envia mensagem ao Formspree (silencioso, não bloqueia o pagamento)
+    fetch('https://formspree.io/f/xaqgjlgg', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome: name, email, whatsapp: phone, mensagem: msg, presente: descricao })
+    }).catch(() => {}); // ignora erro para não travar o pagamento
+
     const orderNsu = 'KR-' + Date.now();
     const redirect = window.location.origin + window.location.pathname + '?pagamento=confirmado';
 

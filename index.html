@@ -852,28 +852,10 @@
 
       <!-- CARTÃO PANEL -->
       <div id="panelCard" style="display:none;">
-        <div style="background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:14px;margin-bottom:14px;">
-          <p style="font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);font-weight:400;margin-bottom:10px;">Simule o parcelamento</p>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;" id="parcelasGrid"></div>
-          <p style="font-size:.68rem;color:var(--text-mid);font-weight:300;margin-top:10px;line-height:1.5;">* Taxas InfinitePay 2026 repassadas ao presenteador. Pix é sempre gratuito.</p>
-        </div>
-        <div style="background:#fff8f6;border:1px solid var(--border);border-radius:3px;padding:12px;margin-bottom:14px;">
-          <label style="display:block;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-mid);margin-bottom:8px;font-weight:400;">Escolha o parcelamento</label>
-          <select id="parcelasSelect" onchange="updateParcelaDisplay()" style="width:100%;border:1px solid var(--border);border-radius:2px;padding:10px 12px;font-family:'Jost',sans-serif;font-size:.88rem;color:var(--text-dark);background:#fff;outline:none;">
-            <option value="1,4.20">1x — taxa 4,20%</option>
-            <option value="2,6.09">2x — taxa 6,09%</option>
-            <option value="3,7.01">3x — taxa 7,01%</option>
-            <option value="4,7.91">4x — taxa 7,91%</option>
-            <option value="5,8.80">5x — taxa 8,80%</option>
-            <option value="6,9.67">6x — taxa 9,67%</option>
-            <option value="7,12.59">7x — taxa 12,59%</option>
-            <option value="8,13.42">8x — taxa 13,42%</option>
-            <option value="9,14.25">9x — taxa 14,25%</option>
-            <option value="10,15.06">10x — taxa 15,06%</option>
-            <option value="11,15.87">11x — taxa 15,87%</option>
-            <option value="12,16.66">12x — taxa 16,66%</option>
-          </select>
-          <div id="parcelaResumo" style="margin-top:10px;padding:10px 12px;background:var(--cream);border-radius:2px;font-size:.82rem;color:var(--text-dark);line-height:1.7;"></div>
+        <div style="background:var(--cream);border:1px solid var(--border);border-radius:3px;padding:16px;text-align:center;margin-bottom:16px;">
+          <p style="font-size:1.8rem;margin-bottom:8px;">💳</p>
+          <p style="font-family:'Cormorant Garamond',serif;font-size:1.4rem;color:var(--terracota-dk);margin-bottom:4px;">Cartão de Crédito</p>
+          <p style="font-size:.78rem;color:var(--text-mid);font-weight:300;line-height:1.7;">Parcelamento em até 12x<br>As taxas são calculadas e exibidas<br>diretamente no checkout da InfinitePay 💳</p>
         </div>
         <button class="btn-checkout" id="btnCard" onclick="pagarCartao()">Pagar com Cartão →</button>
       </div>
@@ -1022,12 +1004,6 @@
     selectTab('pix');
   }
 
-  // Taxas InfinitePay 2026 por parcela (repassadas ao cliente)
-  const taxasInfinitePay = {
-    1: 4.20, 2: 6.09, 3: 7.01, 4: 7.91, 5: 8.80, 6: 9.67,
-    7: 12.59, 8: 13.42, 9: 14.25, 10: 15.06, 11: 15.87, 12: 16.66
-  };
-
   function selectTab(tab) {
     const isPix = tab === 'pix';
     document.getElementById('panelPix').style.display  = isPix ? 'block' : 'none';
@@ -1040,41 +1016,7 @@
     tCard.style.background  = isPix ? '#fff' : 'var(--terracota)';
     tCard.style.color       = isPix ? 'var(--text-mid)' : '#fff';
     tCard.style.borderColor = isPix ? 'var(--border)' : 'var(--terracota)';
-    if (!isPix) buildParcelasGrid();
-  }
 
-  function buildParcelasGrid() {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const grid  = document.getElementById('parcelasGrid');
-    grid.innerHTML = '';
-    [1,2,3,4,5,6,7,8,9,10,11,12].forEach(n => {
-      const taxa          = taxasInfinitePay[n];
-      const totalComTaxa  = total * (1 + taxa / 100);
-      const parcela       = totalComTaxa / n;
-      const el = document.createElement('div');
-      el.style.cssText = 'background:#fff;border:1px solid var(--border);border-radius:2px;padding:7px 8px;font-size:.75rem;color:var(--text-dark);cursor:pointer;';
-      el.innerHTML = '<strong style="color:var(--terracota-dk);">' + n + 'x</strong> ' +
-        fmtBRL(Math.round(parcela)) +
-        '<br><span style="color:var(--text-mid);font-size:.65rem;">' + taxa + '% · total ' + fmtBRL(Math.round(totalComTaxa)) + '</span>';
-      el.onclick = () => {
-        document.getElementById('parcelasSelect').value = n + ',' + taxa;
-        updateParcelaDisplay();
-      };
-      grid.appendChild(el);
-    });
-    updateParcelaDisplay();
-  }
-
-  function updateParcelaDisplay() {
-    const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const sel   = document.getElementById('parcelasSelect');
-    const [parcelas, taxa] = sel.value.split(',').map(Number);
-    const totalComTaxa = total * (1 + taxa / 100);
-    const parcela      = totalComTaxa / parcelas;
-    document.getElementById('parcelaResumo').innerHTML =
-      '<strong>' + parcelas + 'x de ' + fmtBRL(Math.round(parcela)) + '</strong><br>' +
-      'Total com taxa (' + taxa + '%): <strong style="color:var(--terracota);">' + fmtBRL(Math.round(totalComTaxa)) + '</strong><br>' +
-      '<span style="font-size:.7rem;color:var(--text-mid);">Taxa repassada ao presenteador · você recebe 100%</span>';
   }
 
   async function chamarAPI(totalCentavos, descricao) {
@@ -1125,16 +1067,13 @@
 
   async function pagarCartao() {
     const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
-    const sel   = document.getElementById('parcelasSelect');
-    const [parcelas, taxa] = sel.value.split(',').map(Number);
-    // Repassa a taxa ao cliente: cobra total + taxa%
-    const totalComTaxa = Math.round(total * (1 + taxa / 100));
-    const desc = cart.map(i => i.name + ' x' + i.qty).join(' | ') + ' (' + parcelas + 'x c/ taxa)';
-    const btn  = document.getElementById('btnCard');
+    const desc  = cart.map(i => i.name + ' x' + i.qty).join(' | ');
+    const btn   = document.getElementById('btnCard');
     btn.textContent = 'Gerando link…';
     btn.disabled = true;
     try {
-      await chamarAPI(totalComTaxa * 100, desc);
+      // Envia valor original — InfinitePay calcula e exibe as taxas no checkout
+      await chamarAPI(total * 100, desc);
     } catch(err) {
       showToast('Erro: ' + err.message);
       btn.textContent = 'Pagar com Cartão →';
